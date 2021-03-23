@@ -1,3 +1,4 @@
+lear
 const express = require('express');
 const cors = require('cors');
 
@@ -34,11 +35,10 @@ function checksCreateTodosUserAvailability(request, response, next) {
 }
 
 function checksTodoExists(request, response, next) {
+ const { user } = request
+ const { id } = request.params
 
-//  const { username } = request.headers
-//  const { id } = request.params
-
-//  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+//  const isUUID =
 
 //  const 
 
