@@ -25,36 +25,34 @@ function checksExistsUserAccount(request, response, next) {
 function checksCreateTodosUserAvailability(request, response, next) {
   const { user } = request;
 
-  const userAvailability = user.pro === true || user.todos.length < 10;
-
-  if (!userAvailability) {
-    response.status(403).json({ error: "numero máximo de todos alncancados" });
+  if ((user.pro === false && user.todos.length < 10) || user.pro === true) {
+    next();
   }
-
-  next();
+  response.status(403).json({ error: "free plain finished" });
 }
 
 function checksTodoExists(request, response, next) {
   const { username } = request.headers;
   const { id } = request.params;
 
-  const  user  = users.find((user) => user.username === username);
-
+  const user = users.find((user) => {
+    return user.username === username
+  });
   if (!user) {
     return response.status(404).json({ error: "User not found" });
   }
 
-  const validate = (uuid) =>
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(
-      uuid || false
-    );
-
-  const isUUID = validate(user.todos.id);
-  if (!isUUID) {
+  if (!validate(id)) {
     return response.status(400).json({ error: "Informe um uuid valido" });
   }
-  const todo = user.todos.find((todo) => todo.id === id);
-
+ 
+  const todo = user.todos.find((todo) => {
+    return todo.id === id
+  });
+  
+  if(!todo) {
+    return response.status(404).json({ error: "Users todo not found." });
+  }
 
   request.todo = todo;
   request.user = user;
